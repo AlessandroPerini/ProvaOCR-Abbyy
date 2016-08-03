@@ -1,7 +1,5 @@
 # ProvaOCR-Abbyy
-Prova di funzionamento delle librerie online di Abbyy. 
+Prova di funzionamento delle librerie online Abbyy cloud OCR SDK.
 
-Abbyy cloud OCR SDK.
-
-Per convertire un file il programma effettua l'upload, lo converte online
-ed effettua il download del file convertito nel formato desiderato.
+- src/Client/AbbyyExample.java per convertire un file.
+- La conversione avviene online. Il file fiene caricato, convertito e scaricato.
