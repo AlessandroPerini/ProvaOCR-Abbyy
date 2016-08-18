@@ -1,7 +1,11 @@
 package Utils;
 
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
@@ -19,7 +23,7 @@ public class Supporto {
     
     public Supporto(String motore){
         this.motore = motore;
-    }    
+    }
     
     public void timerStart(){
         inizio = System.currentTimeMillis();
@@ -35,9 +39,24 @@ public class Supporto {
         return "File: "+path+"\nMotore: "+motore+"\nTempo: "+tempo+" secondi\nParole totali: "+paroleTotali(result)+"\n\n"+result;
     }
     
-    public void fileOut(String path, String result){
+    public void fileOut(String path, File file){
         
         PrintStream scrivi = null;
+        String result = "";
+        
+        try(BufferedReader br = new BufferedReader(new FileReader(file))) {
+            StringBuilder sb = new StringBuilder();
+            String line = br.readLine();
+            
+            while (line != null) {
+                sb.append(line);
+                sb.append(System.lineSeparator());
+                line = br.readLine();
+            }
+            result = sb.toString();
+        } catch (IOException ex) {
+            Logger.getLogger(Supporto.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
         try {
             path = path+"_"+motore+".txt";
@@ -49,18 +68,18 @@ public class Supporto {
         } finally {
             scrivi.close();
         }
-               
+        
     }
     
     public int paroleTotali(String testo){
-    
+        
         int totale = 0;
         StringTokenizer st = new StringTokenizer(testo);
         while(st.hasMoreTokens()) {
             st.nextToken();
             totale++;
         }
-        return totale;    
+        return totale;
     }
     
 }

@@ -8,70 +8,22 @@ import Services.TextFieldSettings;
 import Services.BusCardSettings;
 import java.util.*;
 
-public class TestApp {
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-
-                args = new String[3];
-                args[0] = "recognize";
-                args[1] = "src/File/example.pdf";
-                args[2] = "src/File/output.txt";
-                        
-		System.out.println("Process documents using ABBYY Cloud OCR SDK.\n");
-
-		if (!checkAppId()) {
-			return;
-		}
-
-		if (args.length < 2) {
-			displayHelp();
-			return;
-		}
-
-		ClientSettings.setupProxy();
-		
-		restClient = new Client();
-		// replace with 'https://cloud.ocrsdk.com' to enable secure connection
-		restClient.serverUrl = "http://cloud.ocrsdk.com";
-		restClient.applicationId = ClientSettings.APPLICATION_ID;
-		restClient.password = ClientSettings.PASSWORD;
-
+public class Ocr {
+    
+        public Ocr(){
+        
+            if (!checkAppId()) {
+                    displayHelp();
+                    return;
+                }
                 
+                ClientSettings.setupProxy();
                 
-		Vector<String> argList = new Vector<String>(Arrays.asList(args));
-
-		// Select processing mode
-		String mode = args[0];
-		argList.remove(0);
-
-		try {
-			if (mode.equalsIgnoreCase("help")) {
-				displayDetailedHelp(args[1]);
-			} else if (mode.equalsIgnoreCase("recognize")) {
-				performRecognition(argList);
-			} else if (mode.equalsIgnoreCase("busCard")) {
-				performBusinessCardRecognition(argList);
-			} else if (mode.equalsIgnoreCase("textField")) {
-				performTextFieldRecognition(argList);
-			} else if (mode.equalsIgnoreCase("barcode")) {
-				performBarcodeRecognition(argList);
-			} else if (mode.equalsIgnoreCase("processFields")) {
-				performFieldsRecognition(argList);
-			} else if (mode.equalsIgnoreCase("MRZ")) {
-				performMrzRecognition(argList);
-			} else {
-				System.out.println("Unknown mode: " + mode);
-				return;
-			}
-		} catch (Exception e) {
-			System.out.println("Exception occured:" + e.getMessage());
-			e.printStackTrace();
-		}
-                
-	}
+                restClient = new Client();
+                restClient.serverUrl = "http://cloud.ocrsdk.com";
+                restClient.applicationId = ClientSettings.APPLICATION_ID;
+                restClient.password = ClientSettings.PASSWORD;     
+        }
 
 	/**
 	 * Check that user specified application id and password.
@@ -157,7 +109,7 @@ public class TestApp {
 	/**
 	 * Parse command line and recognize one or more documents.
 	 */
-	private static void performRecognition(Vector<String> argList) throws Exception {
+	public static void performRecognition(Vector<String> argList) throws Exception {
             
 		String language = CmdLineOptions.extractRecognitionLanguage(argList);
 		String outputPath = argList.lastElement();
@@ -172,7 +124,7 @@ public class TestApp {
 
 		Task task = null;
 		if (argList.size() == 1) {
-			System.out.println("Uploading file..");
+			//System.out.println("Uploading file..");
 			task = restClient.processImage(argList.elementAt(0), settings);
 
 		} else if (argList.size() > 1) {
@@ -417,7 +369,7 @@ public class TestApp {
 		while (task.isTaskActive()) {
 
 			Thread.sleep(5000);
-			System.out.println("Waiting..");
+			//System.out.println("Waiting..");
 			task = restClient.getTaskStatus(task.Id);
 		}
 		return task;
@@ -431,10 +383,10 @@ public class TestApp {
 		task = waitForCompletion(task);
 
 		if (task.Status == Task.TaskStatus.Completed) {
-			System.out.println("Downloading..");
+			//System.out.println("Downloading..");
 			restClient.downloadResult(task, outputPath);
-			System.out.println("Ready!\n");
-                        System.out.println("Il file convertito è: src/File/output.txt");
+			//System.out.println("Ready!\n");
+                        //System.out.println("Il file convertito è: src/File/output.txt");
 		} else if (task.Status == Task.TaskStatus.NotEnoughCredits) {
 			System.out.println("Not enough credits to process document. "
 					+ "Please add more pages to your application's account.");

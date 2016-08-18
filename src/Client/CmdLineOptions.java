@@ -19,10 +19,10 @@ public class CmdLineOptions {
 			return lang;
 		}
 
-		System.out.println(
+		/*System.out.println(
 						"Warning! The document will be processed with English language.\n"
 						+ "To change this, specify --lang=<languages> option.\n");
-
+                */ 
 		return "English";
 	}
 
